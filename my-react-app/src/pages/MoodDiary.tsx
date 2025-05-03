@@ -8,7 +8,11 @@ import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt
 import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfied";
 import MicIcon from "@mui/icons-material/Mic";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
-import Button from "@mui/material/Button";
+import CreateIcon from "@mui/icons-material/Create";
+
+import ReactCanvasPaint from "react-canvas-paint";
+import "react-canvas-paint/dist/index.css";
+// import Button from "@mui/material/Button";
 
 const MoodDiary = () => {
   const [mood, setMood] = useState<number | null>(2);
@@ -58,7 +62,6 @@ const MoodDiary = () => {
 
   const handleFileChange = (event) => {
     console.log(event.target.files);
-    // OR
   };
 
   return (
@@ -78,22 +81,25 @@ const MoodDiary = () => {
           />
 
           <p>Upload your day</p>
-          <label
-            htmlFor="files"
-            className="cursor-pointer flex items-center gap-2 bg-lightpink p-2 rounded-md w-fit"
-          >
-            <FileUploadIcon /> <p>Choose file(s)</p>
-          </label>
+          <div className="flex gap-x-5">
+            <label
+              htmlFor="files"
+              className="cursor-pointer flex items-center gap-2 bg-lightpink p-2 rounded-md w-fit"
+            >
+              <FileUploadIcon /> <p>Choose file(s)</p>
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              name="files"
+              id="files"
+              onChange={handleFileChange}
+              multiple
+              className="hidden"
+            />
+            {/* <CreateIcon fontSize="large" /> <ReactCanvasPaint /> */}
+          </div>
 
-          <input
-            type="file"
-            accept="image/*"
-            name="files"
-            id="files"
-            onChange={handleFileChange}
-            multiple
-            className="hidden"
-          />
           <div>
             <p>
               Notes <MicIcon />
