@@ -3,6 +3,8 @@ import Home from "./pages/Home.tsx";
 import Navbar from "./components/Navbar.tsx";
 import MoodDiary from "./pages/MoodDiary.tsx";
 import "./index.css";
+import Activities from "./pages/Activities.tsx";
+
 
 function App() {
   return (
@@ -12,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/mood" element={<MoodDiary />} />
+          <Route path="/activities" element={<Activities />} />
         </Routes>
       </div>
     </>

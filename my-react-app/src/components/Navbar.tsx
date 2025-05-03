@@ -6,6 +6,10 @@ const Navbar = () => {
   return (
     <nav className="bg-fushia text-xl flex text-white justify-around p-3 rounded-full ml-25 mr-25 mt-5">
       <p className="hover:cursor-pointer" onClick={() => navigate(`/`)}>
+        Home
+      </p>
+
+      <p className="hover:cursor-pointer" onClick={() => navigate(`/activities`)}>
         Animations
       </p>
       <p className="hover:cursor-pointer" onClick={() => navigate(`/mood`)}>
