@@ -18,7 +18,9 @@ import { ReactMediaRecorder } from "react-media-recorder";
 const MoodDiary = () => {
   const [mood, setMood] = useState<number | null>(2);
   const [files, setFiles] = useState<File[]>([]);
+  const [video, setVideo] = useState<string>("");
   const [openCanvas, setOpenCanvas] = useState(false);
+  const [openRecording, setOpenRecording] = useState(false);
   const canvasRef = useRef<ReactSketchCanvasRef>(null);
   const [image, setImage] = useState<string>("");
 
@@ -181,25 +183,74 @@ const MoodDiary = () => {
 
           <div>
             <p>
-              Notes <MicIcon />
+              Notes{" "}
+              <span onClick={() => setOpenRecording(true)}>
+                <MicIcon />
+              </span>
             </p>
 
-            <ReactMediaRecorder
-              audio
-              render={({
-                status,
-                startRecording,
-                stopRecording,
-                mediaBlobUrl,
-              }) => (
-                <div>
-                  <p>{status}</p>
-                  <button onClick={startRecording}>Start Recording</button>
-                  <button onClick={stopRecording}>Stop Recording</button>
-                  <video src={mediaBlobUrl} controls autoPlay loop />
-                </div>
-              )}
-            />
+            <Modal open={openRecording} onClose={() => setOpenCanvas(false)}>
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  bgcolor: "white",
+                  borderRadius: 5,
+                  boxShadow: 24,
+                  p: 4,
+                  fontFamily: "Itim",
+                  width: "650px",
+                  minHeight: "250px",
+                }}
+              >
+                <ReactMediaRecorder
+                  audio
+                  render={({
+                    status,
+                    startRecording,
+                    stopRecording,
+                    mediaBlobUrl,
+                  }) => (
+                    <div className="flex flex-col justify-center">
+                      <p className="text-pink text-2xl">Status: {status}</p>
+                      <div className="flex justify-around gap-x-5 mb-5 mt-5">
+                        <button
+                          onClick={startRecording}
+                          className="bg-pink p-2 rounded-xl text-white cursor-pointer"
+                        >
+                          Start Recording
+                        </button>
+                        <button
+                          onClick={stopRecording}
+                          className="bg-fushia p-2 rounded-xl text-white cursor-pointer"
+                        >
+                          Stop Recording
+                        </button>
+                      </div>
+
+                      {mediaBlobUrl && (
+                        <video
+                          src={mediaBlobUrl}
+                          controls
+                          autoPlay
+                          className="h-fit p-0 mt-0"
+                        />
+                      )}
+
+                      <button
+                        onClick={() => setVideo(mediaBlobUrl)}
+                        className="mt-4 bg-hotpink text-white p-2 rounded-sm"
+                      >
+                        Save Recording
+                      </button>
+                    </div>
+                  )}
+                />
+              </Box>
+            </Modal>
+
             <textarea
               className="bg-lightpink w-full rounded  -xl text-lg"
               rows={8}
