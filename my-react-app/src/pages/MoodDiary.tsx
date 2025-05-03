@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { styled } from "@mui/material/styles";
 import Rating, { IconContainerProps } from "@mui/material/Rating";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
@@ -6,10 +6,12 @@ import SentimentDissatisfiedIcon from "@mui/icons-material/SentimentDissatisfied
 import SentimentSatisfiedIcon from "@mui/icons-material/SentimentSatisfied";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAltOutlined";
 import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfied";
+import MicIcon from "@mui/icons-material/Mic";
 import Button from "@mui/material/Button";
 
 const MoodDiary = () => {
   const [mood, setMood] = useState<number | null>(2);
+
   function submitForm() {
     alert(`You entered the form`);
   }
@@ -53,6 +55,11 @@ const MoodDiary = () => {
     return <span {...other}>{customIcons[value].icon}</span>;
   }
 
+  const handleFileChange = (event) => {
+    console.log(event.target.files);
+    // OR
+  };
+
   return (
     <>
       <div className="bg-white flex flex-col ml-50 mr-50 mt-10 p-5 rounded-3xl shadow-light text-pink text-2xl">
@@ -69,10 +76,18 @@ const MoodDiary = () => {
             sx={{ "& svg": { fontSize: 75 } }}
           />
 
-          <p>Upload your day</p>
-          
+          <label htmlFor="files">Upload your day</label>
+          <input
+            type="file"
+            accept="image/*"
+            name="files"
+            id="files"
+            onChange={handleFileChange}
+            multiple
+            className="text-sm bg-lightpink w-fit rounded-md p-2"
+          />
           <div>
-            <p>Notes</p>
+            <p>Notes <MicIcon /></p>
             <textarea className="bg-lightpink w-full rounded-xl text-lg" />
           </div>
 
