@@ -20,6 +20,7 @@ const MoodDiary = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [openCanvas, setOpenCanvas] = useState(false);
   const canvasRef = useRef<ReactSketchCanvasRef>(null);
+  const [image, setImage] = useState<string>("");
 
   function submitForm() {
     alert(`You entered the form`);
@@ -142,7 +143,6 @@ const MoodDiary = () => {
                   p: 4,
                   fontFamily: "Itim",
                 }}
-
                 className="flex flex-col justify-center"
               >
                 <h2 className="text-xl mb-4">Draw your day ✏️</h2>
@@ -160,6 +160,7 @@ const MoodDiary = () => {
                     if (!canvasRef.current) return;
                     const image = await canvasRef.current.exportImage("png");
                     console.log(image);
+                    setImage(image);
                     setOpenCanvas(false);
                   }}
                   className="mt-4 bg-hotpink text-white p-2 rounded-sm"
@@ -168,6 +169,12 @@ const MoodDiary = () => {
                 </button>
               </Box>
             </Modal>
+
+            
+            {image && 
+              <img src={image} alt="Your drawing" className="border border-solid rounded-xl mt-5"/>
+            }
+            
           </div>
 
           <div>
