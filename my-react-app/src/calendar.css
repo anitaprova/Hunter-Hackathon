@@ -1,5 +1,5 @@
 .react-calendar {
-  background-color: #FFF5F5;
+  background-color: #ffffff;
 	color: #FB4570;
   padding: 2%;
   border-radius: 25px;
@@ -10,12 +10,15 @@
   font-size: 20px;
   transition: 0.2s;
 	border: solid;
-	border-color: white;
+	border-color: #FFEEE7;
+  border-radius: 25px;
+  margin-bottom: 5px;
+  
 }
 
 .react-calendar__tile:enabled:hover {
-  background-color: #FB8DA0;
-  color: #FFF5F5;
+  background-color: #B0e0e6;
+  color: #ffffff;
 }
 
 .react-calendar__tile--active {
@@ -37,3 +40,5 @@
 .react-calendar__navigation:hover{
 	cursor: pointer;
 }
+
+

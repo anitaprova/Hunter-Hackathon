@@ -1,16 +1,76 @@
+import { ChangeEvent, useState } from "react";
+import { styled } from "@mui/material/styles";
+import Rating, { IconContainerProps } from "@mui/material/Rating";
+import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
+import SentimentDissatisfiedIcon from "@mui/icons-material/SentimentDissatisfied";
+import SentimentSatisfiedIcon from "@mui/icons-material/SentimentSatisfied";
+import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAltOutlined";
+import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfied";
+import Button from "@mui/material/Button";
+
 const MoodDiary = () => {
-  function search() {
+  const [mood, setMood] = useState<number | null>(2);
+  function submitForm() {
     alert(`You entered the form`);
   }
-  
+
+  const StyledRating = styled(Rating)(({ theme }) => ({
+    "& .MuiRating-iconEmpty .MuiSvgIcon-root": {
+      color: theme.palette.action.disabled,
+    },
+  }));
+
+  const customIcons: {
+    [index: string]: {
+      icon: React.ReactElement<unknown>;
+      label: string;
+    };
+  } = {
+    1: {
+      icon: <SentimentVeryDissatisfiedIcon color="error" />,
+      label: "Very Dissatisfied",
+    },
+    2: {
+      icon: <SentimentDissatisfiedIcon color="error" />,
+      label: "Dissatisfied",
+    },
+    3: {
+      icon: <SentimentSatisfiedIcon color="warning" />,
+      label: "Neutral",
+    },
+    4: {
+      icon: <SentimentSatisfiedAltIcon color="success" />,
+      label: "Satisfied",
+    },
+    5: {
+      icon: <SentimentVerySatisfiedIcon color="success" />,
+      label: "Very Satisfied",
+    },
+  };
+
+  function IconContainer(props: IconContainerProps) {
+    const { value, ...other } = props;
+    return <span {...other}>{customIcons[value].icon}</span>;
+  }
+
   return (
     <>
       <div className="bg-white flex flex-col ml-50 mr-50 mt-10 p-5 rounded-3xl shadow-light text-pink text-2xl">
-        <form action={search} className="flex flex-col gap-y-10">
+        <form action={submitForm} className="flex flex-col gap-y-5">
           <p>How are you today?</p>
+          <StyledRating
+            name="highlight-selected-only"
+            value={mood}
+            onChange={(event, newValue) => {
+              setMood(newValue);
+            }}
+            getLabelText={(value: number) => customIcons[value].label}
+            slots={{ icon: IconContainer }}
+            sx={{ "& svg": { fontSize: 75 } }}
+          />
 
           <p>Upload your day</p>
-
+          
           <div>
             <p>Notes</p>
             <textarea className="bg-lightpink w-full rounded-xl text-lg" />
