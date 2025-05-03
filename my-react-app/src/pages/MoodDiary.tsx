@@ -14,8 +14,10 @@ import Box from "@mui/material/Box";
 import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 import { useRef } from "react";
 import { ReactMediaRecorder } from "react-media-recorder";
+import { useNavigate } from "react-router-dom";
 
 const MoodDiary = () => {
+  const navigate = useNavigate();
   const [mood, setMood] = useState<number | null>(2);
   const [files, setFiles] = useState<File[]>([]);
   const [video, setVideo] = useState<string>("");
@@ -29,13 +31,26 @@ const MoodDiary = () => {
   
   const recognition = new SpeechRecognition();
 
-  recognition.onresult = (event: any) => {
+  recognition.onresult = (event) => {
     const transcript = event.results[0][0].transcript;
     setText(transcript);
   };
 
   function submitForm() {
-    alert(`You entered the form`);
+    const entry = {
+      mood,
+      files,
+      image,
+      text,
+      video,
+      date: new Date().toISOString().split("T")[0],
+    };
+    const existing = JSON.parse(localStorage.getItem("journalEntries") || "{}");
+    existing[entry.date] = entry;
+
+    localStorage.setItem("journalEntries", JSON.stringify(existing));
+    // navigate(`/`);
+
   }
 
   const StyledRating = styled(Rating)(({ theme }) => ({
@@ -169,7 +184,6 @@ const MoodDiary = () => {
                   onClick={async () => {
                     if (!canvasRef.current) return;
                     const image = await canvasRef.current.exportImage("png");
-                    console.log(image);
                     setImage(image);
                     setOpenCanvas(false);
                   }}

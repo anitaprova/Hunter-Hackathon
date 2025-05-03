@@ -6,8 +6,12 @@ import "../calendar.css";
 const Home = () => {
   const [date, setDate] = useState(new Date());
   const [showPopup, setShowPopup] = useState(false);
+  const [entry, setEntry] = useState();
 
   const handleClickDay = (value) => {
+    const selectedDate = value.toISOString().split("T")[0];
+    const entries = JSON.parse(localStorage.getItem("journalEntries") || "{}");
+    setEntry(entries[selectedDate] || null);
     setDate(value);
     setShowPopup(true);
   };
@@ -32,6 +36,21 @@ const Home = () => {
             Calendar
           </h1>
           <Calendar onClickDay={handleClickDay} />
+          {showPopup && entry && (
+            <div className="entry-popup">
+              <p>
+                <strong>Mood:</strong> {entry.mood}
+              </p>
+              <p>
+                <strong>Text:</strong> {entry.text}
+              </p>
+              {entry.image && <img src={entry.image} alt="Drawing" />}
+              {entry.video && <video src={entry.video} controls />}
+              {entry.files &&
+                entry.files.map((file, idx) => <p key={idx}>{file.name}</p>)}
+            </div>
+          )}
+          {showPopup && !entry && <p>No entry for this day.</p>}
         </div>
       </div>
     </>
