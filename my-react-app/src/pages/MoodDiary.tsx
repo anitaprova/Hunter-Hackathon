@@ -7,6 +7,7 @@ import SentimentSatisfiedIcon from "@mui/icons-material/SentimentSatisfied";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAltOutlined";
 import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfied";
 import MicIcon from "@mui/icons-material/Mic";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
 import Button from "@mui/material/Button";
 
 const MoodDiary = () => {
@@ -76,7 +77,14 @@ const MoodDiary = () => {
             sx={{ "& svg": { fontSize: 75 } }}
           />
 
-          <label htmlFor="files">Upload your day</label>
+          <p>Upload your day</p>
+          <label
+            htmlFor="files"
+            className="cursor-pointer flex items-center gap-2 bg-lightpink p-2 rounded-md w-fit"
+          >
+            <FileUploadIcon /> <p>Choose file(s)</p>
+          </label>
+
           <input
             type="file"
             accept="image/*"
@@ -84,10 +92,12 @@ const MoodDiary = () => {
             id="files"
             onChange={handleFileChange}
             multiple
-            className="text-sm bg-lightpink w-fit rounded-md p-2"
+            className="hidden"
           />
           <div>
-            <p>Notes <MicIcon /></p>
+            <p>
+              Notes <MicIcon />
+            </p>
             <textarea className="bg-lightpink w-full rounded-xl text-lg" />
           </div>
 
