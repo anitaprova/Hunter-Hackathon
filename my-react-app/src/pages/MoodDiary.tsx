@@ -23,6 +23,16 @@ const MoodDiary = () => {
   const [openRecording, setOpenRecording] = useState(false);
   const canvasRef = useRef<ReactSketchCanvasRef>(null);
   const [image, setImage] = useState<string>("");
+  const [transcript, setTranscript] = useState<string>("");
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+  
+  const recognition = new SpeechRecognition();
+
+  recognition.onresult = (event) => {
+    const tran = event.results[0][0].transcript;
+    setTranscript(tran);
+  };
 
   function submitForm() {
     alert(`You entered the form`);
@@ -74,8 +84,6 @@ const MoodDiary = () => {
     console.log(selectedFiles);
     setFiles(Array.from(selectedFiles));
   };
-
-  console.log(files);
 
   return (
     <>
@@ -217,7 +225,10 @@ const MoodDiary = () => {
                       <p className="text-pink text-2xl">Status: {status}</p>
                       <div className="flex justify-around gap-x-5 mb-5 mt-5">
                         <button
-                          onClick={startRecording}
+                          onClick={() => {
+                            startRecording();
+                            recognition.start();
+                          }}
                           className="bg-pink p-2 rounded-xl text-white cursor-pointer"
                         >
                           Start Recording
@@ -256,6 +267,7 @@ const MoodDiary = () => {
             <textarea
               className="bg-lightpink w-full rounded  -xl text-lg"
               rows={8}
+              value={transcript}
             />
 
             {video && <video src={video} controls className="h-fit p-0 mt-0" />}
