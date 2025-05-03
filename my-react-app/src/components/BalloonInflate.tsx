@@ -5,7 +5,7 @@ const BalloonInflate: React.FC = () => {
   const [isPopped, setIsPopped] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const inflateSoundRef = useRef<HTMLAudioElement | null>(null); 
-  const maxSize = 300;
+  const maxSize = 400;
 
   const startInflating = () => {
     if (isPopped) return;
@@ -33,7 +33,7 @@ const BalloonInflate: React.FC = () => {
 
           return prev;
         }
-        return prev + 5;
+        return prev + 10;
       });
     }, 100);
   };

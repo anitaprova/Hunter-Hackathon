@@ -1,15 +1,26 @@
-import React, { useState } from 'react';
+
+import React, { useState, useRef, useEffect } from 'react';
 
 const LightBulb: React.FC = () => {
   const [isOn, setIsOn] = useState(false);
+  const clickSoundRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    // Preload sound on mount
+    clickSoundRef.current = new Audio('/switch.wav');
+    clickSoundRef.current.load();
+  }, []);
 
   const toggleLight = () => {
-    setIsOn(!isOn);
+    if (clickSoundRef.current) {
+      clickSoundRef.current.currentTime = 0;
+      clickSoundRef.current.play();
+    }
+    setIsOn((prev) => !prev);
   };
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full">
-      {/* Bulb */}
       <div
         className="w-40 h-52 rounded-t-full rounded-b-[60%] transition-all duration-300"
         style={{
@@ -18,10 +29,8 @@ const LightBulb: React.FC = () => {
         }}
       ></div>
 
-      {/* String + Circle */}
       <div className="flex flex-col items-center mt-2">
         <div className="w-1 h-16 bg-hotpink" />
-
         <button
           onClick={toggleLight}
           className="w-6 h-6 rounded-full bg-hotpink hover:bg-pink transition mt-0 -translate-y-1"
@@ -33,4 +42,3 @@ const LightBulb: React.FC = () => {
 };
 
 export default LightBulb;
-

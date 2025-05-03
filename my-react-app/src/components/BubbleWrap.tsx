@@ -12,7 +12,7 @@ const BubbleWrap: React.FC = () => {
     newState[index] = true;
     setPopped(newState);
 
-    const audio = new Audio('/public/pop.mp3');
+    const audio = new Audio('/pop.mp3');
     audio.play().catch((e) => console.log("Sound playback failed:", e));
   };
 
