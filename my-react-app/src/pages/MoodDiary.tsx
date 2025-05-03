@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
 import Rating, { IconContainerProps } from "@mui/material/Rating";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
@@ -13,7 +13,10 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 import { useRef } from "react";
-import { ReactMediaRecorder } from "react-media-recorder";
+import {
+  ReactMediaRecorder,
+  useReactMediaRecorder,
+} from "react-media-recorder";
 import { useNavigate } from "react-router-dom";
 
 const MoodDiary = () => {
@@ -26,14 +29,24 @@ const MoodDiary = () => {
   const canvasRef = useRef<ReactSketchCanvasRef>(null);
   const [image, setImage] = useState<string>("");
   const [text, setText] = useState<string>("");
+  const { stopRecording } = useReactMediaRecorder({ video: true });
   const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
-  
-  const recognition = new SpeechRecognition();
 
-  recognition.onresult = (event) => {
-    const transcript = event.results[0][0].transcript;
-    setText(transcript);
+  const recognition = new SpeechRecognition();
+  recognition.continuous = true;
+
+  recognition.onresult = (event: { results: SpeechRecognitionResultList }) => {
+    const results: SpeechRecognitionResultList = event.results;
+
+    const additions = [];
+    for (const result of results) {
+      for (let index = 0; index < result.length; index++) {
+        additions.push(result[index].transcript);
+      }
+    }
+
+    setText(text + (text === "" ? "" : " ") + additions.join(" "));
   };
 
   function submitForm() {
@@ -47,10 +60,9 @@ const MoodDiary = () => {
     };
     const existing = JSON.parse(localStorage.getItem("journalEntries") || "{}");
     existing[entry.date] = entry;
-
+    console.log(existing);
     localStorage.setItem("journalEntries", JSON.stringify(existing));
     // navigate(`/`);
-
   }
 
   const StyledRating = styled(Rating)(({ theme }) => ({
@@ -214,7 +226,14 @@ const MoodDiary = () => {
               </span>
             </p>
 
-            <Modal open={openRecording} onClose={() => setOpenRecording(false)}>
+            <Modal
+              open={openRecording}
+              onClose={() => {
+                setOpenRecording(false);
+                stopRecording();
+                recognition.stop();
+              }}
+            >
               <Box
                 sx={{
                   position: "absolute",
@@ -251,7 +270,10 @@ const MoodDiary = () => {
                           Start Recording
                         </button>
                         <button
-                          onClick={stopRecording}
+                          onClick={() => {
+                            stopRecording();
+                            recognition.stop();
+                          }}
                           className="bg-fushia p-2 rounded-xl text-white cursor-pointer"
                         >
                           Stop Recording

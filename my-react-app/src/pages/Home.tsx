@@ -18,6 +18,8 @@ const Home = () => {
     setShowPopup(true);
   };
 
+  console.log(entry);
+
   return (
     <>
       <div className="relative">
@@ -51,16 +53,24 @@ const Home = () => {
                 boxShadow: 24,
                 p: 4,
                 fontFamily: "Itim",
+                minWidth: "500px",
+                minHeight: "250px",
+                fontSize: "20px",
               }}
             >
               {entry ? (
                 <div>
-                  <p>
-                    <strong>Your Mood:</strong> {entry?.mood} / 5
-                  </p>
-                  <p>
-                    <strong>Your thoughts:</strong> {entry?.text}
-                  </p>
+                  {entry.mood && (
+                    <p>
+                      <strong>Your Mood:</strong> {entry.mood} / 5
+                    </p>
+                  )}
+                  {entry.text && (
+                    <p>
+                      <strong>Your thoughts:</strong> {entry?.text}
+                    </p>
+                  )}
+
                   {entry?.image && (
                     <>
                       <p>
@@ -73,9 +83,10 @@ const Home = () => {
                       />
                     </>
                   )}
-                  {entry?.video && <video src={entry.video} controls />}
-                  {entry?.files &&
-                    entry?.files.map((file, idx) => (
+
+                  {entry.video && <video src={entry.video} controls />}
+                  {entry.files &&
+                    entry.files.map((file, idx) => (
                       <p key={idx}>{file.name}</p>
                     ))}
                 </div>
