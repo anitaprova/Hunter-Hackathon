@@ -13,7 +13,7 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 import { useRef } from "react";
-import Flex from "react-calendar/src/Flex.js";
+import { ReactMediaRecorder } from "react-media-recorder";
 
 const MoodDiary = () => {
   const [mood, setMood] = useState<number | null>(2);
@@ -170,25 +170,44 @@ const MoodDiary = () => {
               </Box>
             </Modal>
 
-            
-            {image && 
-              <img src={image} alt="Your drawing" className="border border-solid rounded-xl mt-5"/>
-            }
-            
+            {image && (
+              <img
+                src={image}
+                alt="Your drawing"
+                className="border border-solid rounded-xl mt-5"
+              />
+            )}
           </div>
 
           <div>
             <p>
               Notes <MicIcon />
             </p>
+
+            <ReactMediaRecorder
+              audio
+              render={({
+                status,
+                startRecording,
+                stopRecording,
+                mediaBlobUrl,
+              }) => (
+                <div>
+                  <p>{status}</p>
+                  <button onClick={startRecording}>Start Recording</button>
+                  <button onClick={stopRecording}>Stop Recording</button>
+                  <video src={mediaBlobUrl} controls autoPlay loop />
+                </div>
+              )}
+            />
             <textarea
-              className="bg-lightpink w-full rounded-xl text-lg"
+              className="bg-lightpink w-full rounded  -xl text-lg"
               rows={8}
             />
           </div>
 
           <button
-            className="bg-hotpink p-3 rounded-xl text-white"
+            className="bg-hotpink p-3 rounded-xl text-white cursor-pointer"
             type="submit"
           >
             Submit
