@@ -9,13 +9,14 @@ import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfi
 import MicIcon from "@mui/icons-material/Mic";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import CreateIcon from "@mui/icons-material/Create";
-
 import ReactCanvasPaint from "react-canvas-paint";
 import "react-canvas-paint/dist/index.css";
-// import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
 
 const MoodDiary = () => {
   const [mood, setMood] = useState<number | null>(2);
+  const [files, setFiles] = useState<File[]>([]);
 
   function submitForm() {
     alert(`You entered the form`);
@@ -60,9 +61,15 @@ const MoodDiary = () => {
     return <span {...other}>{customIcons[value].icon}</span>;
   }
 
-  const handleFileChange = (event) => {
-    console.log(event.target.files);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = event.target.files;
+    if (!selectedFiles) return;
+
+    console.log(selectedFiles);
+    setFiles(Array.from(selectedFiles));
   };
+
+  console.log(files);
 
   return (
     <>
@@ -81,30 +88,48 @@ const MoodDiary = () => {
           />
 
           <p>Upload your day</p>
-          <div className="flex gap-x-5">
-            <label
-              htmlFor="files"
-              className="cursor-pointer flex items-center gap-2 bg-lightpink p-2 rounded-md w-fit"
-            >
-              <FileUploadIcon /> <p>Choose file(s)</p>
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              name="files"
-              id="files"
-              onChange={handleFileChange}
-              multiple
-              className="hidden"
-            />
-            {/* <CreateIcon fontSize="large" /> <ReactCanvasPaint /> */}
+          <div className="flex flex-col gap-x-5">
+            <div>
+              <label
+                htmlFor="files"
+                className="cursor-pointer flex items-center gap-2 bg-lightpink p-2 rounded-md w-fit"
+              >
+                <FileUploadIcon /> <p>Choose file(s)</p>
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                name="files"
+                id="files"
+                onChange={handleFileChange}
+                multiple
+                className="hidden"
+              />
+            </div>
+            <div className="text-sm">
+              {files.length > 0 && (
+                <ul>
+                  {files.map((file, index) => (
+                    <li key={index}>{file.name}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+
+          <div>
+            /* <CreateIcon fontSize="large" />
+            {/* { <ReactCanvasPaint />} */}
           </div>
 
           <div>
             <p>
               Notes <MicIcon />
             </p>
-            <textarea className="bg-lightpink w-full rounded-xl text-lg" rows={8}/>
+            <textarea
+              className="bg-lightpink w-full rounded-xl text-lg"
+              rows={8}
+            />
           </div>
 
           <button
