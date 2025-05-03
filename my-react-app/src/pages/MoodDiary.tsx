@@ -49,10 +49,25 @@ const MoodDiary = () => {
     setText(text + (text === "" ? "" : " ") + additions.join(" "));
   };
 
-  function submitForm() {
+  const convertFilesToBase64 = (files: File[]) => {
+    return Promise.all(
+      files.map(
+        (file) =>
+          new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+          })
+      )
+    );
+  };
+
+  async function submitForm() {
+    const fileData = await convertFilesToBase64(files);
     const entry = {
       mood,
-      files,
+      files: fileData,
       image,
       text,
       video,
@@ -60,10 +75,9 @@ const MoodDiary = () => {
     };
     const existing = JSON.parse(localStorage.getItem("journalEntries") || "{}");
     existing[entry.date] = entry;
-    console.log(existing);
     localStorage.setItem("journalEntries", JSON.stringify(existing));
-    // navigate(`/`);
   }
+
 
   const StyledRating = styled(Rating)(({ theme }) => ({
     "& .MuiRating-iconEmpty .MuiSvgIcon-root": {
@@ -148,7 +162,7 @@ const MoodDiary = () => {
               />
             </div>
             <div className="text-sm">
-              {files.length > 0 && (
+              {files?.length > 0 && (
                 <ul>
                   {files.map((file, index) => (
                     <li key={index}>{file.name}</li>
