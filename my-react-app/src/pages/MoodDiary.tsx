@@ -66,7 +66,7 @@ const MoodDiary = () => {
 
   return (
     <>
-      <div className="bg-white flex flex-col ml-50 mr-50 mt-10 p-5 rounded-3xl shadow-light text-pink text-2xl">
+      <div className="bg-white flex flex-col ml-50 mr-50 mt-10 p-5 rounded-3xl shadow-light text-pink text-2xl mb-15">
         <form action={submitForm} className="flex flex-col gap-y-5">
           <p>How are you today?</p>
           <StyledRating
@@ -104,7 +104,7 @@ const MoodDiary = () => {
             <p>
               Notes <MicIcon />
             </p>
-            <textarea className="bg-lightpink w-full rounded-xl text-lg" />
+            <textarea className="bg-lightpink w-full rounded-xl text-lg" rows={8}/>
           </div>
 
           <button
