@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { Component, useState } from 'react';
 import LightBulb from '../components/LightBulb';
 import BalloonInflate from '../components/BalloonInflate';
 import ArrowLeft from '@mui/icons-material/ArrowBackIosNew';
 import ArrowRight from '@mui/icons-material/ArrowForwardIos';
+import BubbleWrap from '../components/BubbleWrap';
 
 const animations = [
   { id: 'lightbulb', component: <LightBulb /> },
   { id: 'balloon', component: <BalloonInflate /> },
+  { id: 'bubblewrap', component: <BubbleWrap/>}
 ];
 
 const Activities: React.FC = () => {
