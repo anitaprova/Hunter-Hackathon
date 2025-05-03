@@ -23,15 +23,15 @@ const MoodDiary = () => {
   const [openRecording, setOpenRecording] = useState(false);
   const canvasRef = useRef<ReactSketchCanvasRef>(null);
   const [image, setImage] = useState<string>("");
-  const [transcript, setTranscript] = useState<string>("");
+  const [text, setText] = useState<string>("");
   const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
   
   const recognition = new SpeechRecognition();
 
-  recognition.onresult = (event) => {
-    const tran = event.results[0][0].transcript;
-    setTranscript(tran);
+  recognition.onresult = (event: any) => {
+    const transcript = event.results[0][0].transcript;
+    setText(transcript);
   };
 
   function submitForm() {
@@ -190,9 +190,12 @@ const MoodDiary = () => {
           </div>
 
           <div>
-            <p>
+            <p className="mb-5">
               Write or record your thoughts{" "}
-              <span onClick={() => setOpenRecording(true)}>
+              <span
+                onClick={() => setOpenRecording(true)}
+                className="border border-solid border-3 p-1 rounded-full cursor-pointer"
+              >
                 <MicIcon />
               </span>
             </p>
@@ -265,12 +268,17 @@ const MoodDiary = () => {
             </Modal>
 
             <textarea
-              className="bg-lightpink w-full rounded  -xl text-lg"
+              className="bg-lightpink w-full rounded-xl p-3 text-lg text-fushia"
               rows={8}
-              value={transcript}
+              value={text}
+              onChange={(event) => setText(event.target.value)}
             />
 
-            {video && <video src={video} controls className="h-fit p-0 mt-0" />}
+            {video && (
+              <div className="flex justify-center">
+                <video src={video} controls className="p-0 mt-0" />
+              </div>
+            )}
           </div>
 
           <button
