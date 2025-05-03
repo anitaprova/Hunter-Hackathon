@@ -183,13 +183,13 @@ const MoodDiary = () => {
 
           <div>
             <p>
-              Notes{" "}
+              Write or record your thoughts{" "}
               <span onClick={() => setOpenRecording(true)}>
                 <MicIcon />
               </span>
             </p>
 
-            <Modal open={openRecording} onClose={() => setOpenCanvas(false)}>
+            <Modal open={openRecording} onClose={() => setOpenRecording(false)}>
               <Box
                 sx={{
                   position: "absolute",
@@ -234,14 +234,16 @@ const MoodDiary = () => {
                         <video
                           src={mediaBlobUrl}
                           controls
-                          autoPlay
                           className="h-fit p-0 mt-0"
                         />
                       )}
 
                       <button
-                        onClick={() => setVideo(mediaBlobUrl)}
-                        className="mt-4 bg-hotpink text-white p-2 rounded-sm"
+                        onClick={() => {
+                          if (mediaBlobUrl) setVideo(mediaBlobUrl);
+                          setOpenRecording(false);
+                        }}
+                        className="mt-4 bg-hotpink text-white p-2 rounded-sm cursor-pointer"
                       >
                         Save Recording
                       </button>
@@ -255,6 +257,8 @@ const MoodDiary = () => {
               className="bg-lightpink w-full rounded  -xl text-lg"
               rows={8}
             />
+
+            {video && <video src={video} controls className="h-fit p-0 mt-0" />}
           </div>
 
           <button
