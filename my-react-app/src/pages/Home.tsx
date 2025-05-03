@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
 import Calendar from "react-calendar";
 import cloud from "../assets/cloud.svg";
 import "../calendar.css";
@@ -15,7 +17,7 @@ const Home = () => {
     setDate(value);
     setShowPopup(true);
   };
-  
+
   return (
     <>
       <div className="relative">
@@ -36,21 +38,52 @@ const Home = () => {
             Calendar
           </h1>
           <Calendar onClickDay={handleClickDay} />
-          {showPopup && entry && (
-            <div className="entry-popup">
-              <p>
-                <strong>Mood:</strong> {entry.mood}
-              </p>
-              <p>
-                <strong>Text:</strong> {entry.text}
-              </p>
-              {entry.image && <img src={entry.image} alt="Drawing" />}
-              {entry.video && <video src={entry.video} controls />}
-              {entry.files &&
-                entry.files.map((file, idx) => <p key={idx}>{file.name}</p>)}
-            </div>
-          )}
-          {showPopup && !entry && <p>No entry for this day.</p>}
+
+          <Modal open={showPopup} onClose={() => setShowPopup(false)}>
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                bgcolor: "white",
+                borderRadius: 5,
+                boxShadow: 24,
+                p: 4,
+                fontFamily: "Itim",
+              }}
+            >
+              {entry ? (
+                <div>
+                  <p>
+                    <strong>Your Mood:</strong> {entry?.mood} / 5
+                  </p>
+                  <p>
+                    <strong>Your thoughts:</strong> {entry?.text}
+                  </p>
+                  {entry?.image && (
+                    <>
+                      <p>
+                        <strong>Your drawing:</strong>
+                      </p>
+                      <img
+                        src={entry.image}
+                        alt="Drawing"
+                        className="border border-pink border-3 border-solid rounded-xl mt-5"
+                      />
+                    </>
+                  )}
+                  {entry?.video && <video src={entry.video} controls />}
+                  {entry?.files &&
+                    entry?.files.map((file, idx) => (
+                      <p key={idx}>{file.name}</p>
+                    ))}
+                </div>
+              ) : (
+                <p className="p-5 text-2xl">No entry for this date</p>
+              )}
+            </Box>
+          </Modal>
         </div>
       </div>
     </>
