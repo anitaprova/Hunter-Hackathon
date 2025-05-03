@@ -23,7 +23,7 @@ const Activities: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-pink">
+    <div className="min-h-screen flex items-center justify-center">
       <div className="relative bg-white w-[90vw] h-[80vh] max-w-[900px] max-h-[600px] rounded-3xl shadow-light p-6 flex items-center justify-center overflow-hidden">
         
         <div className="w-full h-full flex items-center justify-center">

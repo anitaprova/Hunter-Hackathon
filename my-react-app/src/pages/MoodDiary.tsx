@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
 import Rating, { IconContainerProps } from "@mui/material/Rating";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
@@ -9,17 +9,75 @@ import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfi
 import MicIcon from "@mui/icons-material/Mic";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import CreateIcon from "@mui/icons-material/Create";
-
-import ReactCanvasPaint from "react-canvas-paint";
-import "react-canvas-paint/dist/index.css";
-// import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
+import { useRef } from "react";
+import {
+  ReactMediaRecorder,
+  useReactMediaRecorder,
+} from "react-media-recorder";
+import { useNavigate } from "react-router-dom";
 
 const MoodDiary = () => {
+  const navigate = useNavigate();
   const [mood, setMood] = useState<number | null>(2);
+  const [files, setFiles] = useState<File[]>([]);
+  const [video, setVideo] = useState<string>("");
+  const [openCanvas, setOpenCanvas] = useState(false);
+  const [openRecording, setOpenRecording] = useState(false);
+  const canvasRef = useRef<ReactSketchCanvasRef>(null);
+  const [image, setImage] = useState<string>("");
+  const [text, setText] = useState<string>("");
+  const { stopRecording } = useReactMediaRecorder({ video: true });
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
 
-  function submitForm() {
-    alert(`You entered the form`);
+  const recognition = new SpeechRecognition();
+  recognition.continuous = true;
+
+  recognition.onresult = (event: { results: SpeechRecognitionResultList }) => {
+    const results: SpeechRecognitionResultList = event.results;
+
+    const additions = [];
+    for (const result of results) {
+      for (let index = 0; index < result.length; index++) {
+        additions.push(result[index].transcript);
+      }
+    }
+
+    setText(text + (text === "" ? "" : " ") + additions.join(" "));
+  };
+
+  const convertFilesToBase64 = (files: File[]) => {
+    return Promise.all(
+      files.map(
+        (file) =>
+          new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+          })
+      )
+    );
+  };
+
+  async function submitForm() {
+    const fileData = await convertFilesToBase64(files);
+    const entry = {
+      mood,
+      files: fileData,
+      image,
+      text,
+      video,
+      date: new Date().toISOString().split("T")[0],
+    };
+    const existing = JSON.parse(localStorage.getItem("journalEntries") || "{}");
+    existing[entry.date] = entry;
+    localStorage.setItem("journalEntries", JSON.stringify(existing));
   }
+
 
   const StyledRating = styled(Rating)(({ theme }) => ({
     "& .MuiRating-iconEmpty .MuiSvgIcon-root": {
@@ -60,13 +118,17 @@ const MoodDiary = () => {
     return <span {...other}>{customIcons[value].icon}</span>;
   }
 
-  const handleFileChange = (event) => {
-    console.log(event.target.files);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = event.target.files;
+    if (!selectedFiles) return;
+
+    console.log(selectedFiles);
+    setFiles(Array.from(selectedFiles));
   };
 
   return (
     <>
-      <div className="bg-white flex flex-col ml-50 mr-50 mt-10 p-5 rounded-3xl shadow-light text-pink text-2xl">
+      <div className="bg-white flex flex-col ml-50 mr-50 mt-10 p-5 rounded-3xl shadow-light text-pink text-2xl mb-15">
         <form action={submitForm} className="flex flex-col gap-y-5">
           <p>How are you today?</p>
           <StyledRating
@@ -81,34 +143,196 @@ const MoodDiary = () => {
           />
 
           <p>Upload your day</p>
-          <div className="flex gap-x-5">
-            <label
-              htmlFor="files"
-              className="cursor-pointer flex items-center gap-2 bg-lightpink p-2 rounded-md w-fit"
-            >
-              <FileUploadIcon /> <p>Choose file(s)</p>
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              name="files"
-              id="files"
-              onChange={handleFileChange}
-              multiple
-              className="hidden"
-            />
-            {/* <CreateIcon fontSize="large" /> <ReactCanvasPaint /> */}
+          <div className="flex flex-col gap-x-5">
+            <div>
+              <label
+                htmlFor="files"
+                className="cursor-pointer flex items-center gap-2 bg-lightpink p-2 rounded-md w-fit"
+              >
+                <FileUploadIcon /> <p>Choose file(s)</p>
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                name="files"
+                id="files"
+                onChange={handleFileChange}
+                multiple
+                className="hidden"
+              />
+            </div>
+            <div className="text-sm">
+              {files?.length > 0 && (
+                <ul>
+                  {files.map((file, index) => (
+                    <li key={index}>{file.name}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
 
           <div>
-            <p>
-              Notes <MicIcon />
+            <button
+              type="button"
+              onClick={() => setOpenCanvas(true)}
+              className="flex items-center gap-2 bg-lightpink p-2 rounded-md w-fit"
+            >
+              <CreateIcon /> <p>Draw</p>
+            </button>
+
+            <Modal open={openCanvas} onClose={() => setOpenCanvas(false)}>
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  bgcolor: "white",
+                  borderRadius: 5,
+                  boxShadow: 24,
+                  p: 4,
+                  fontFamily: "Itim",
+                }}
+                className="flex flex-col justify-center"
+              >
+                <h2 className="text-xl mb-4">Draw your day ✏️</h2>
+                <ReactSketchCanvas
+                  ref={canvasRef}
+                  width="650px"
+                  height="400px"
+                  strokeWidth={4}
+                  strokeColor="hotpink"
+                  style={{ border: "1px solid #FB4570", borderRadius: "5px" }}
+                />
+
+                <button
+                  onClick={async () => {
+                    if (!canvasRef.current) return;
+                    const image = await canvasRef.current.exportImage("png");
+                    setImage(image);
+                    setOpenCanvas(false);
+                  }}
+                  className="mt-4 bg-hotpink text-white p-2 rounded-sm"
+                >
+                  Save Drawing
+                </button>
+              </Box>
+            </Modal>
+
+            {image && (
+              <img
+                src={image}
+                alt="Your drawing"
+                className="border border-solid rounded-xl mt-5"
+              />
+            )}
+          </div>
+
+          <div>
+            <p className="mb-5">
+              Write or record your thoughts{" "}
+              <span
+                onClick={() => setOpenRecording(true)}
+                className="border border-solid border-3 p-1 rounded-full cursor-pointer"
+              >
+                <MicIcon />
+              </span>
             </p>
-            <textarea className="bg-lightpink w-full rounded-xl text-lg" />
+
+            <Modal
+              open={openRecording}
+              onClose={() => {
+                setOpenRecording(false);
+                stopRecording();
+                recognition.stop();
+              }}
+            >
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  bgcolor: "white",
+                  borderRadius: 5,
+                  boxShadow: 24,
+                  p: 4,
+                  fontFamily: "Itim",
+                  width: "650px",
+                  minHeight: "250px",
+                }}
+              >
+                <ReactMediaRecorder
+                  audio
+                  render={({
+                    status,
+                    startRecording,
+                    stopRecording,
+                    mediaBlobUrl,
+                  }) => (
+                    <div className="flex flex-col justify-center">
+                      <p className="text-pink text-2xl">Status: {status}</p>
+                      <div className="flex justify-around gap-x-5 mb-5 mt-5">
+                        <button
+                          onClick={() => {
+                            startRecording();
+                            recognition.start();
+                          }}
+                          className="bg-pink p-2 rounded-xl text-white cursor-pointer"
+                        >
+                          Start Recording
+                        </button>
+                        <button
+                          onClick={() => {
+                            stopRecording();
+                            recognition.stop();
+                          }}
+                          className="bg-fushia p-2 rounded-xl text-white cursor-pointer"
+                        >
+                          Stop Recording
+                        </button>
+                      </div>
+
+                      {mediaBlobUrl && (
+                        <video
+                          src={mediaBlobUrl}
+                          controls
+                          className="h-fit p-0 mt-0"
+                        />
+                      )}
+
+                      <button
+                        onClick={() => {
+                          if (mediaBlobUrl) setVideo(mediaBlobUrl);
+                          setOpenRecording(false);
+                        }}
+                        className="mt-4 bg-hotpink text-white p-2 rounded-sm cursor-pointer"
+                      >
+                        Save Recording
+                      </button>
+                    </div>
+                  )}
+                />
+              </Box>
+            </Modal>
+
+            <textarea
+              className="bg-lightpink w-full rounded-xl p-3 text-lg text-fushia"
+              rows={8}
+              value={text}
+              onChange={(event) => setText(event.target.value)}
+            />
+
+            {video && (
+              <div className="flex justify-center">
+                <video src={video} controls className="p-0 mt-0" />
+              </div>
+            )}
           </div>
 
           <button
-            className="bg-hotpink p-3 rounded-xl text-white"
+            className="bg-hotpink p-3 rounded-xl text-white cursor-pointer"
             type="submit"
           >
             Submit

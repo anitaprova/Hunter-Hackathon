@@ -8,8 +8,10 @@ const Navbar = () => {
       <p className="hover:cursor-pointer" onClick={() => navigate(`/`)}>
         Home
       </p>
-
-      <p className="hover:cursor-pointer" onClick={() => navigate(`/activities`)}>
+      <p
+        className="hover:cursor-pointer"
+        onClick={() => navigate(`/activities`)}
+      >
         Animations
       </p>
       <p className="hover:cursor-pointer" onClick={() => navigate(`/mood`)}>
