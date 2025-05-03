@@ -9,14 +9,17 @@ import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfi
 import MicIcon from "@mui/icons-material/Mic";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import CreateIcon from "@mui/icons-material/Create";
-import ReactCanvasPaint from "react-canvas-paint";
-import "react-canvas-paint/dist/index.css";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
+import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
+import { useRef } from "react";
+import Flex from "react-calendar/src/Flex.js";
 
 const MoodDiary = () => {
   const [mood, setMood] = useState<number | null>(2);
   const [files, setFiles] = useState<File[]>([]);
+  const [openCanvas, setOpenCanvas] = useState(false);
+  const canvasRef = useRef<ReactSketchCanvasRef>(null);
 
   function submitForm() {
     alert(`You entered the form`);
@@ -118,8 +121,53 @@ const MoodDiary = () => {
           </div>
 
           <div>
-            /* <CreateIcon fontSize="large" />
-            {/* { <ReactCanvasPaint />} */}
+            <button
+              type="button"
+              onClick={() => setOpenCanvas(true)}
+              className="flex items-center gap-2 bg-lightpink p-2 rounded-md w-fit"
+            >
+              <CreateIcon /> <p>Draw</p>
+            </button>
+
+            <Modal open={openCanvas} onClose={() => setOpenCanvas(false)}>
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  bgcolor: "white",
+                  borderRadius: 5,
+                  boxShadow: 24,
+                  p: 4,
+                  fontFamily: "Itim",
+                }}
+
+                className="flex flex-col justify-center"
+              >
+                <h2 className="text-xl mb-4">Draw your day ✏️</h2>
+                <ReactSketchCanvas
+                  ref={canvasRef}
+                  width="650px"
+                  height="400px"
+                  strokeWidth={4}
+                  strokeColor="hotpink"
+                  style={{ border: "1px solid #FB4570", borderRadius: "5px" }}
+                />
+
+                <button
+                  onClick={async () => {
+                    if (!canvasRef.current) return;
+                    const image = await canvasRef.current.exportImage("png");
+                    console.log(image);
+                    setOpenCanvas(false);
+                  }}
+                  className="mt-4 bg-hotpink text-white p-2 rounded-sm"
+                >
+                  Save Drawing
+                </button>
+              </Box>
+            </Modal>
           </div>
 
           <div>
