@@ -36,6 +36,9 @@ const LightBulb: React.FC = () => {
           className="w-6 h-6 rounded-full bg-hotpink hover:bg-pink transition mt-0 -translate-y-1"
           title="Toggle Light"
         ></button>
+
+    <p className="absolute bottom-4 mt-4 text-hotpink text-lg">Turn on the Lamp!</p>
+
       </div>
     </div>
   );

@@ -4,11 +4,14 @@ import BalloonInflate from '../components/BalloonInflate';
 import ArrowLeft from '@mui/icons-material/ArrowBackIosNew';
 import ArrowRight from '@mui/icons-material/ArrowForwardIos';
 import BubbleWrap from '../components/BubbleWrap';
+import RippleWater from '../components/RippleRainCloud';
 
 const animations = [
   { id: 'lightbulb', component: <LightBulb /> },
   { id: 'balloon', component: <BalloonInflate /> },
-  { id: 'bubblewrap', component: <BubbleWrap/>}
+  { id: 'bubblewrap', component: <BubbleWrap/>},
+  { id: 'ripplewater', component: <RippleWater/>}
+
 ];
 
 const Activities: React.FC = () => {

@@ -37,7 +37,7 @@ const BubbleWrap: React.FC = () => {
           />
         ))}
       </div>
-      <p className="mt-4 text-hotpink text-lg">Tap the bubbles to pop!</p>
+      <p className="absolute bottom-4 mt-4 text-hotpink text-lg">Tap the bubbles to pop!</p>
     </div>
   );
 };
