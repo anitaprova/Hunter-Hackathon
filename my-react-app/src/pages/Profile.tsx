@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
@@ -34,10 +34,40 @@ const Profile = () => {
     setValue(newValue);
   };
 
+  useEffect(() => {
+    const character = JSON.parse(localStorage.getItem("avatar") || "{}");
+    setHair(character.hair || "");
+    setEyebrow(character.eyebrows || "");
+    setEyes(character.eyes || "");
+    setNose(character.nose || "");
+    setMouth(character.mouth || "");
+    setSkin(character.skin || "base");
+  }, []);
+
+  async function submitForm() {
+    const character = {
+      hair,
+      eyes,
+      eyebrow,
+      nose,
+      mouth,
+      skin,
+    };
+
+    localStorage.setItem("avatar", JSON.stringify(character));
+  }
+
   return (
     <>
       <div className="flex gap-x-5 ml-50 mr-50 mt-10 p-5 rounded-3xl text-pink text-2xl mb-15">
         <div className="bg-white rounded-3xl w-[50%] ">
+          <button
+            onClick={submitForm}
+            className="w-fit bg-hotpink ml-5 mt-5 text-white p-2 rounded-md w-fit cursor-pointer pl-5 pr-5"
+          >
+            Save Character
+          </button>
+
           <div className="relative">
             <img src={`src/assets/img/skin/${skin}.PNG`} className="w-full" />{" "}
             {hair && (
@@ -71,14 +101,11 @@ const Profile = () => {
               />
             )}
           </div>
-          <div className="ml-5 mr-5">
-            <p>Skin colors:</p>
+          <div className="ml-5 mr-5 mb-2">
+            <p className="text-hotpink">Skin colors:</p>
             <div className="flex gap-x-5 justify-around">
               {allSkin.map((skin) => (
-                <p
-                  className="cursor-pointer"
-                  onClick={() => setSkin(skin)}
-                >
+                <p className="cursor-pointer" onClick={() => setSkin(skin)}>
                   {skin}
                 </p>
               ))}
