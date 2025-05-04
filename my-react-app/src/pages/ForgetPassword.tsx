@@ -3,8 +3,10 @@ import { useState } from "react";
 import { sendPasswordResetEmail } from "firebase/auth";
 // @ts-ignore
 import { auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
 
 export default function ForgetPassword() {
+	const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
 
@@ -32,12 +34,20 @@ export default function ForgetPassword() {
         />
         <button
           type="submit"
-					onClick={() => alert("Link sent! Go to your email and change your password")}
+          onClick={() =>
+            alert("Link sent! Go to your email and change your password")
+          }
           className="w-fit bg-hotpink text-white p-2 rounded-md w-fit cursor-pointer pl-5 pr-5"
         >
           Submit
         </button>
       </form>
+      <button
+        className="underline text-pink text-md mt-5 cursor-pointer"
+        onClick={() => navigate("/login")}
+      >
+        Go back to login
+      </button>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );

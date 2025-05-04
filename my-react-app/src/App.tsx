@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Home from "./pages/Home.tsx";
 import Navbar from "./components/Navbar.tsx";
 import MoodDiary from "./pages/MoodDiary.tsx";
@@ -10,10 +10,15 @@ import Login from "./pages/Login.tsx";
 import ForgetPassword from "./pages/ForgetPassword.tsx";
 
 function App() {
+  const location = useLocation();
+  const isAuthPage = ["/login", "/signup", "/forgetpassword"].includes(
+    location.pathname
+  );
+  
   return (
     <>
       <div className="font-display">
-        <Navbar />
+        {!isAuthPage && <Navbar />}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/mood" element={<MoodDiary />} />

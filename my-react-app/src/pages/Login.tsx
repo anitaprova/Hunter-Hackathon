@@ -18,7 +18,7 @@ export default function Login() {
     try {
       if (currentUser && currentUser.emailVerified) {
         await signInWithEmailAndPassword(auth, email, password);
-        navigate(`/home`);
+        navigate(`/`);
       } else {
         console.log(currentUser, "Not verified");
       }
