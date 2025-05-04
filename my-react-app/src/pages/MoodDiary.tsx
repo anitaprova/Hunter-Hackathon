@@ -75,9 +75,10 @@ const MoodDiary = () => {
     };
     const existing = JSON.parse(localStorage.getItem("journalEntries") || "{}");
     existing[entry.date] = entry;
+    console.log(entry);
     localStorage.setItem("journalEntries", JSON.stringify(existing));
+    navigate(`/`);
   }
-
 
   const StyledRating = styled(Rating)(({ theme }) => ({
     "& .MuiRating-iconEmpty .MuiSvgIcon-root": {
@@ -129,7 +130,13 @@ const MoodDiary = () => {
   return (
     <>
       <div className="bg-white flex flex-col ml-50 mr-50 mt-10 p-5 rounded-3xl shadow-light text-pink text-2xl mb-15">
-        <form action={submitForm} className="flex flex-col gap-y-5">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            submitForm();
+          }}
+          className="flex flex-col gap-y-5"
+        >
           <p>How are you today?</p>
           <StyledRating
             name="highlight-selected-only"
