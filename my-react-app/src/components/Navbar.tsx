@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -16,6 +17,10 @@ const Navbar = () => {
       </p>
       <p className="hover:cursor-pointer" onClick={() => navigate(`/mood`)}>
         Mood Diary
+      </p>
+
+      <p className="hover:cursor-pointer" onClick={() => navigate(`/profile`)}>
+        <AccountCircleIcon fontSize="large" />
       </p>
     </nav>
   );

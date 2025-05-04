@@ -18,8 +18,6 @@ const Home = () => {
     setShowPopup(true);
   };
 
-  console.log(entry?.files);
-
   return (
     <>
       <div className="relative">
@@ -87,7 +85,6 @@ const Home = () => {
                   {entry.video && <video src={entry.video} controls />}
                   {entry.files &&
                     entry.files.map((file, idx) => (
-                      // <p key={idx}>{file.name}</p>
                       <img key={idx} src={file} />
                     ))}
                 </div>
