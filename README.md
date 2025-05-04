@@ -1,6 +1,6 @@
 # 🌸☁️ CottonCloud
 
-_A playful wellness and mental health app that helps you unwind, reflect, and grow.
+A playful wellness and mental health app that helps you unwind, reflect, and grow.
 
 ---
 
