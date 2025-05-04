@@ -6,22 +6,24 @@ const Navbar = () => {
 
   return (
     <nav className="bg-fushia text-xl flex text-white justify-around p-3 rounded-full ml-25 mr-25 mt-5">
-      <p className="hover:cursor-pointer" onClick={() => navigate(`/`)}>
-        Home
-      </p>
-      <p
-        className="hover:cursor-pointer"
-        onClick={() => navigate(`/activities`)}
-      >
-        Unwind
-      </p>
-      <p className="hover:cursor-pointer" onClick={() => navigate(`/mood`)}>
-        Mood Diary
-      </p>
+      <div className="flex items-center gap-2 hover:cursor-pointer" onClick={() => navigate(`/`)}>
+        <img src="/cloud.png" alt="Home" className="w-9 h-6" />
+        <span>Home</span>
+      </div>
 
-      <p className="hover:cursor-pointer" onClick={() => navigate(`/profile`)}>
+      <div className="flex items-center gap-2 hover:cursor-pointer" onClick={() => navigate(`/activities`)}>
+        <img src="/unwind.png" alt="Unwind" className="w-6 h-6" />
+        <span>Unwind</span>
+      </div>
+
+      <div className="flex items-center gap-2 hover:cursor-pointer" onClick={() => navigate(`/mood`)}>
+        <img src="diary.png" alt="Mood Diary" className="w-6 h-6" />
+        <span>Mood Diary</span>
+      </div>
+
+      <div className="hover:cursor-pointer" onClick={() => navigate(`/profile`)}>
         <AccountCircleIcon fontSize="large" />
-      </p>
+      </div>
     </nav>
   );
 };
