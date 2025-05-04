@@ -5,12 +5,15 @@ import ArrowLeft from '@mui/icons-material/ArrowBackIosNew';
 import ArrowRight from '@mui/icons-material/ArrowForwardIos';
 import BubbleWrap from '../components/BubbleWrap';
 import RippleWater from '../components/RippleRainCloud';
+import PlantGrow from '../components/PlantGrow';
 
 const animations = [
   { id: 'lightbulb', component: <LightBulb /> },
   { id: 'balloon', component: <BalloonInflate /> },
   { id: 'bubblewrap', component: <BubbleWrap/>},
-  { id: 'ripplewater', component: <RippleWater/>}
+  { id: 'ripplewater', component: <RippleWater/>},
+  { id: 'plantgrow', component: <PlantGrow/>}
+
 
 ];
 
