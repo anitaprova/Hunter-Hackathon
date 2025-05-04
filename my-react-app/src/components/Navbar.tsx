@@ -13,7 +13,7 @@ const Navbar = () => {
         className="hover:cursor-pointer"
         onClick={() => navigate(`/activities`)}
       >
-        Animations
+        Unwind
       </p>
       <p className="hover:cursor-pointer" onClick={() => navigate(`/mood`)}>
         Mood Diary
