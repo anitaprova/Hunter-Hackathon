@@ -17,7 +17,7 @@ const RippleRainCloud: React.FC = () => {
   const dropIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    waterSoundRef.current = new Audio('/water.wav');
+    waterSoundRef.current = new Audio('/rain.wav');
     waterSoundRef.current.loop = true;
     waterSoundRef.current.volume = 0.6;
 
